@@ -10,9 +10,8 @@ const getSignUp = (req,res)=>{
 const postSignUp = async (req,res)=>{
     const {error} = signUpValidation(req.body);
     if(error) return res.status(400).json({error:true,message:error.details[0].message});
+    const {user_name,password}=req.body;
     try{
-
-        const {user_name,password}=req.body;
         //check user name exist
         const userExist = await userProfile.findOne({user_name});
         // let existMessage=`user ${body.user_name} already exist`;
@@ -52,7 +51,8 @@ const postLogIn = async (req,res)=>{
     const hashPassword = userData.password;
 
     // check password
-    const comparedPassword = bcrypt.compare(password,hashPassword);
+    const comparedPassword = await bcrypt.compare(password,hashPassword);
+    
       if(!comparedPassword) return res.status(401).json({error:"true",logedIn:"false",message:" password wrong"});
 
       // generate token

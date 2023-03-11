@@ -49,8 +49,9 @@ const postBlog = async (req,res)=>{
   const userData = jwt.verify(accessToken,process.env.ACCESS_TOKEN_PRIVATE_KEY,(err,success)=>err?false:success);
   if(userData)
   {
-    const blogId = req.params.id;
-    const blogData = new userBlog({... req.body,user_id:userId});
+    try{
+      const inputData = {... req.body,user_id:userData.userId};
+    const blogData = new userBlog(inputData);
     const savedData = await blogData.save();
     if(savedData)
     {
@@ -59,6 +60,10 @@ const postBlog = async (req,res)=>{
     else{
         res.status(201).json({error:false,message:" blog not inserted",accessToken});
     }
+    }catch(err){
+      res.status(500).json({error:false,message:" catch blog not inserted",accessToken,err});
+    }
+    
   }// end if
   else{
     res.status(403).json({error:true,message:"unautherize",accessToken});

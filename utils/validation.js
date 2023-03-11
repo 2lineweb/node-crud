@@ -2,7 +2,7 @@ import joi from "joi";
 import joiPasswordComplexity from "joi-password-complexity";
 
  const signUpValidation = (body)=>{
- const signUpSchema = Joi.object({
+ const signUpSchema = joi.object({
     first_name:joi.string().required().label("First Name"),
     last_name:joi.string().required().label("Last Name"),
     email: joi.string().required().email().label("Email"),
